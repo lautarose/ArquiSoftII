@@ -1,7 +1,7 @@
 package services
 
 import (
-	bookDao "microservicio/daos/book"
+	itemDao "microservicio/daos/item"
 	"microservicio/dtos"
 	model "microservicio/models"
 	e "microservicio/utils/errors"
@@ -23,7 +23,23 @@ func init() {
 	BookService = &bookService{}
 }
 
-func (s *bookService) GetBook(id string) (dtos.BookDto, e.ApiError) {
+func (s *bookService) InsertBook(bookDto dtos.BookDto) (dtos.BookDto, e.ApiError) {
+
+	var book model.Book
+
+	book.Name = bookDto.Name 
+
+	book = bookDao.Insert(book)
+
+	if book.Id.Hex() == "000000000000000000000000" {
+		return bookDto, e.NewBadRequestApiError("error in insert")
+	}
+	bookDto.Id = book.Id.Hex()
+
+	return bookDto, nil
+}
+
+/*func (s *bookService) GetBook(id string) (dtos.BookDto, e.ApiError) {
 
 	var book model.Book = bookDao.GetById(id)
 	var bookDto dtos.BookDto
@@ -52,4 +68,4 @@ func (s *bookService) InsertBook(bookDto dtos.BookDto) (dtos.BookDto, e.ApiError
 	bookDto.Id = book.Id.Hex()
 
 	return bookDto, nil
-}
+}*/
