@@ -7,36 +7,46 @@ import (
 	e "microservicio/utils/errors"
 )
 
-type bookService struct{}
+type itemService struct{}
 
-type bookServiceInterface interface {
-	GetBook(id string) (dtos.BookDto, e.ApiError)
-	 
-	InsertBook(bookDto dtos.BookDto) (dtos.BookDto, e.ApiError)
+type itemServiceInterface interface {
+	//GetBook(id string) (dtos.ItemDto, e.ApiError)
+
+	InsertItem(bookDto dtos.ItemDto) (dtos.ItemDto, e.ApiError)
 }
 
 var (
-	BookService bookServiceInterface
+	ItemService itemServiceInterface
 )
 
 func init() {
-	BookService = &bookService{}
+	ItemService = &itemService{}
 }
 
-func (s *bookService) InsertBook(bookDto dtos.BookDto) (dtos.BookDto, e.ApiError) {
+func (s *itemService) InsertItem(itemDto dtos.ItemDto) (dtos.ItemDto, e.ApiError) {
 
-	var book model.Book
+	var item model.Item
 
-	book.Name = bookDto.Name 
+	item.Tittle = itemDto.Tittle
+	item.Seller = itemDto.Seller
+	item.Price = itemDto.Price
+	item.Currency = itemDto.Currency
+	item.Pictures = itemDto.Pictures
+	item.Description = itemDto.Description
+	item.State = itemDto.State
+	item.City = itemDto.City
+	item.Street = itemDto.Street
+	item.Number = itemDto.Number
 
-	book = bookDao.Insert(book)
+	item = itemDao.InsertItem(item)
 
-	if book.Id.Hex() == "000000000000000000000000" {
-		return bookDto, e.NewBadRequestApiError("error in insert")
+	if item.Id.Hex() == "000000000000000000000000" {
+		return itemDto, e.NewBadRequestApiError("error in insert")
 	}
-	bookDto.Id = book.Id.Hex()
 
-	return bookDto, nil
+	itemDto.Id = item.Id.Hex()
+
+	return itemDto, nil
 }
 
 /*func (s *bookService) GetBook(id string) (dtos.BookDto, e.ApiError) {
@@ -52,13 +62,13 @@ func (s *bookService) InsertBook(bookDto dtos.BookDto) (dtos.BookDto, e.ApiError
 	return bookDto, nil
 }
 
- 
+
 
 func (s *bookService) InsertBook(bookDto dtos.BookDto) (dtos.BookDto, e.ApiError) {
 
 	var book model.Book
 
-	book.Name = bookDto.Name 
+	book.Name = bookDto.Name
 
 	book = bookDao.Insert(book)
 

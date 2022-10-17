@@ -6,18 +6,20 @@ import (
 	model "microservicio/models"
 	"microservicio/utils/db"
 	//"go.mongodb.org/mongo-driver/bson"
-	//"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func InsertItem(item model.Item) model.Item {
-	db := db.MongoDb
-	_, err := db.Collection("items").InsertOne(context.TODO(), &item)
+	db:=db.MongoDb
+	insertItem:=item
+	insertItem.Id=primitive.NewObjectID()
+	_, err := db.Collection("items").InsertOne(context.TODO(), &insertItem)
 
-	if err != nil {
-		fmt.Println(err)
-		return item
-	}
-
+if err != nil {
+	fmt.Println(err)
+	return item
+}
+	 item.Id =  insertItem.Id
 	return item
 }
 

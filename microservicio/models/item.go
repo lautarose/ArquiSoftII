@@ -1,7 +1,9 @@
 package model
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 type Item struct {
-	Id          int      `bson:"_id"`
+	Id          primitive.ObjectID      `bson:"_id"`
 	Tittle      string   `bson:"tittle"`
 	Seller      string   `bson:"seller"`
 	Price       float64  `bson:"price"`
